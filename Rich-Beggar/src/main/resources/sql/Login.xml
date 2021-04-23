@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="login">
+	<select id="insertlogin" resultType="Ju.User.UserVO" parameterType="Ju.User.UserVO">
+		SELECT * FROM user
+		Where
+		userID=#{userID} and userPass=#{userPass};
+	</select>
+		<select id="logout" resultType="Ju.User.UserVO" parameterType="Ju.User.UserVO">
+
+	</select>
+</mapper>

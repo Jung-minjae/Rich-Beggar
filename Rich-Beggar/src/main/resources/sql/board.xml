@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+
+
+	<select id="selectBoardCount" resultType="Integer"
+		parameterType="Ju.board.PageVO">
+		
+		SELECT COUNT(*) FROM (Select @rownum:=@rownum+1 as num, n.* 
+		from(select * from contents ${sql} order by contentID desc)n, 
+		(select @rownum:=0)v)num;
+
+	</select>
+
+	<select id="selectBoardList" resultType="Ju.board.BoardVO"
+		parameterType="Ju.board.PageVO">
+		Select * from (Select @rownum:=@rownum+1 as num, n.* from(select * from contents ${sql} order by contentID desc)n, 
+				(select @rownum:=0)v)num Where num.num between '${start}' and '${end}';
+	</select>
+	<select id="selectBoardView" resultType="Ju.board.BoardVO"
+		parameterType="int">
+		select*from contents where contentID=#{contentID};
+
+	</select>
+	<insert id="selectBoardWrite" parameterType="Ju.board.BoardVO">
+		Insert into contents
+		(userID,Title,content) values(#{userID},#{Title},#{content});
+
+	</insert>
+	<insert id="selectBoardUpdate" parameterType="Ju.board.BoardVO">
+		update contents set
+		title =#{Title}, content =#{content}
+		where contentID=#{contentID}
+	</insert>
+
+	<insert id="selectBoardDelete" parameterType="int">
+		delete from contents where contentID=${contentID}
+	</insert>
+
+
+	<!-- <select id="selectBoardList1" resultType="Ju.board.BoardVO" -->
+	<!-- parameterType="Ju.board.BoardSearchVO"> -->
+	<!-- SELECT BRDNO, BRDTITLE, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE, -->
+	<!-- BRDLIKE -->
+	<!-- , TB.USERNO, USERNM BRDWRITER, BGNAME, TB.BGNO -->
+	<!-- , (SELECT -->
+	<!-- COUNT(*) FROM TBL_BOARDREAD WHERE BRDNO=TB.BRDNO) BRDHIT -->
+	<!-- , (SELECT -->
+	<!-- COUNT(*) FROM TBL_BOARDFILE WHERE BRDNO=TB.BRDNO) FILECNT -->
+	<!-- , (SELECT -->
+	<!-- COUNT(*) FROM TBL_BOARDREPLY WHERE BRDNO=TB.BRDNO AND -->
+	<!-- REDELETEFLAG='N') REPLYCNT -->
+	<!-- FROM TBL_BOARD TB -->
+	<!-- INNER JOIN COM_USER CU ON -->
+	<!-- TB.USERNO=CU.USERNO -->
+	<!-- INNER JOIN TBL_BOARDGROUP TBG ON TBG.BGNO=TB.BGNO -->
+	<!-- WHERE ${searchType} LIKE CONCAT('%',#{searchKeyword},'%') -->
+	<!-- ORDER BY -->
+	<!-- BRDNO DESC -->
+	<!-- <if test="rowStart != null"> -->
+	<!-- LIMIT ${rowStart-1}, 10 -->
+	<!-- </if> -->
+	<!-- </select> -->
+
+	<select id="selectcommnet" resultType="Ju.board.CommentVO"
+		parameterType="String">
+		SELECT * FROM comment where code = #{code}
+	</select>
+	<select id="selectinsertComment" resultType="Ju.board.CommentVO"
+		parameterType="Ju.board.CommentVO">
+		Insert into comment (code,userID,comment)
+		values(#{code},#{userID},#{comment});
+	</select>
+</mapper>
+
